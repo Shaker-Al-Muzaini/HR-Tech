@@ -1,0 +1,64 @@
+version: "3.9"
+
+networks:
+  interview-net:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
+  recordings-data:
+
+services:
+
+  # ─────────────────────────────────────────
+  # PostgreSQL — قاعدة البيانات الموحدة
+  # ─────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: interview_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE:-interview_db}
+      POSTGRES_USER: ${DB_USERNAME:-interview_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-interview_pass_2026}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - interview-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-interview_user} -d ${DB_DATABASE:-interview_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────
+  # Redis — طوابير + Cache
+  # ─────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: interview_redis
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD:-redis_pass_2026} --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    ports:
+      - "6379:6379"
+    networks:
+      - interview-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-redis_pass_2026}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+# ═══════════════════════════════════════════════════════════════
+# ⚠️ ملاحظة: FastAPI الآن يعمل على Windows مباشرة (خارج Docker)
+# السبب: aiortc داخل Docker على Windows لا يستطيع إرسال ICE Candidates
+#        بشكل صحيح، مما يمنع WebRTC من إكمال الاتصال.
+#
+# لتشغيل FastAPI راجع ملف: RUN_FASTAPI.md
+# ═══════════════════════════════════════════════════════════════

@@ -1,0 +1,46 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+# ─────────────────────────────────────────────────────────
+# FastAPI Requirements — المرحلة الأولى (بدون Ollama/ChromaDB)
+# ─────────────────────────────────────────────────────────
+
+# ─── Web Framework ───
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+pydantic-settings==2.5.2
+python-multipart==0.0.12
+
+# ─── Database ───
+asyncpg==0.29.0
+sqlalchemy[asyncio]==2.0.35
+alembic==1.13.3
+
+# ─── Redis ───
+redis[hiredis]==5.1.1
+
+# ─── Video/Audio Processing ───
+opencv-python-headless==4.10.0.84
+soundfile==0.12.1
+numpy==1.26.4
+scipy==1.14.1
+
+# ─── Prosody / Pitch / SNR ───
+praat-parselmouth==0.4.3
+librosa==0.10.2.post1
+soxr==0.3.7          # Resampling عالي الجودة (أفضل من librosa للعربية)
+
+# ─── Speech to Text ───
+faster-whisper==1.0.3
+
+# ─── Face Analysis ───
+mediapipe==0.10.20
+# ─── Object Detection ───
+ultralytics==8.3.9
+
+# ─── WebRTC ───
+aiortc==1.9.0
+
+# ─── Utilities ───
+python-jose[cryptography]==3.3.0
+httpx==0.27.2
+aiofiles==24.1.0

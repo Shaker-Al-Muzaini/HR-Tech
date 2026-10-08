@@ -1,0 +1,108 @@
+cd "D:\HR Tech\laravel"; @'
+# ═══════════════════════════════════════════════════════════
+# 🐘 Laravel 11 + Vue 3 — .gitignore
+# ═══════════════════════════════════════════════════════════
+
+# ─── Dependencies ───
+/vendor
+/node_modules
+/.pnp
+.pnp.js
+bower_components/
+
+# ─── Build Output ───
+/public/build
+/public/hot
+/public/storage
+/public/mix-manifest.json
+/storage/*.key
+/storage/framework/cache/data/*
+!/storage/framework/cache/data/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/app/private/*
+!/storage/app/private/.gitignore
+/storage/app/public/*
+!/storage/app/public/.gitignore
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# ─── Environment ───
+.env
+.env.backup
+.env.production
+.env.staging
+.env.local
+.env.*.local
+!.env.example
+
+# ─── Authentication ───
+auth.json
+
+# ─── PHP ───
+*.cache
+.phpunit.result.cache
+.phpunit.cache/
+.php-cs-fixer.cache
+.php-cs-fixer.php
+_ide_helper.php
+_ide_helper_models.php
+.phpstorm.meta.php
+
+# ─── Database (local only) ───
+/database/*.sqlite
+/database/*.sqlite-journal
+/database/database.sqlite
+
+# ─── Homestead / Sail ───
+Homestead.json
+Homestead.yaml
+/.sail
+docker-compose.override.yml
+
+# ─── Logs ───
+npm-debug.log
+yarn-error.log
+yarn.lock.lock
+pnpm-debug.log
+/storage/logs/*.log
+
+# ─── Node ───
+.npm
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
+
+# ─── Vite ───
+.vite/
+node_modules/.vite/
+
+# ─── Tests Coverage ───
+/coverage
+/.phpunit.cache
+tests/_reports/
+
+# ─── IDE / Editor ───
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
+desktop.ini
+'@ | Out-File -FilePath ".gitignore" -Encoding UTF8; Write-Host "✅ laravel/.gitignore created"

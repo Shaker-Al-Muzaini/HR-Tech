@@ -1,0 +1,164 @@
+cd "D:\HR Tech\fastApi"; @'
+# ═══════════════════════════════════════════════════════════
+# 🐍 FastAPI + AI Pipelines — .gitignore
+# ═══════════════════════════════════════════════════════════
+
+# ─── Python Virtual Environments ───
+venv/
+env/
+ENV/
+.venv/
+.ENV/
+env.bak/
+venv.bak/
+
+# ─── Python Bytecode ───
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# ─── Distribution / Packaging ───
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ─── Unit Test / Coverage ───
+.pytest_cache/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.lcov
+.nyc_output
+
+# ─── Type Checking / Linting ───
+.mypy_cache/
+.dmypy.json
+dmypy.json
+.ruff_cache/
+.pytype/
+.pyre/
+.pylint.d/
+
+# ─── Environment Variables ───
+.env
+.env.*
+!.env.example
+
+# ─── FastAPI / Uvicorn ───
+*.pid
+*.seed
+*.pid.lock
+
+# ═══════════════════════════════════════════════════════════
+# 🎥 Media Files (Recordings — لا نرفع تسجيلات المقابلات)
+# ═══════════════════════════════════════════════════════════
+recordings/
+*.mp4
+*.webm
+*.mkv
+*.avi
+*.mov
+*.wav
+*.mp3
+*.ogg
+
+# ─── Temporary Audio/Video Chunks ───
+tmp/
+temp/
+*.tmp
+*.part
+
+# ═══════════════════════════════════════════════════════════
+# 🤖 AI Models (كبيرة الحجم — تُحمّل عند الحاجة)
+# ═══════════════════════════════════════════════════════════
+# حذف التعليق أدناه إذا أردت رفع الموديل إلى git
+# yolov8s.pt
+# yolov8n.pt
+# yolov8m.pt
+# yolov8l.pt
+# yolov8x.pt
+# *.pt
+# *.onnx
+# *.h5
+# *.pb
+
+# ─── YOLO Cache ───
+runs/
+weights/
+.datasets/
+*.cache
+
+# ─── Whisper / Mediapipe Cache ───
+.cache/
+.whisper/
+.mediapipe/
+
+# ─── FFmpeg / Video ───
+ffmpeg-*/
+ffprobe-*/
+
+# ─── Logs ───
+logs/
+*.log
+!requirements.txt
+
+# ─── Alembic (keep migrations, ignore nothing here) ───
+# alembic/versions/*.py  ← نُبقي migrations
+
+# ─── SQLite / Local DB ───
+*.db
+*.sqlite
+*.sqlite3
+
+# ─── Jupyter Notebook ───
+.ipynb_checkpoints/
+*.ipynb_checkpoints/
+
+# ─── IDE / Editor ───
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+*.sublime-project
+*.sublime-workspace
+*.swp
+*.swo
+*~
+
+# ─── OS ───
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Docker ───
+.dockerignore
+docker-compose.override.yml
+
+# ─── MyPy / Pyright ───
+pyrightconfig.json
+'@ | Out-File -FilePath ".gitignore" -Encoding UTF8; Write-Host "✅ fastApi/.gitignore created"
