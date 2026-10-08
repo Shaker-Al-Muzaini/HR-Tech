@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-950 to-purple-950 flex items-center justify-center p-6 font-sans" dir="rtl">
 
     <Transition
@@ -23,7 +23,7 @@
     </Transition>
 
     <div class="w-full max-w-6xl">
-      
+
       <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-3">
           <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/50">
@@ -46,6 +46,30 @@
           <span class="text-xs font-bold">{{ status }}</span>
         </div>
       </div>
+
+      <Transition
+        enter-active-class="transition duration-500 ease-out"
+        enter-from-class="opacity-0 -translate-y-4"
+        enter-to-class="opacity-100 translate-y-0">
+        <div v-if="cameraError"
+             class="mb-5 p-5 rounded-2xl bg-gradient-to-l from-red-500/20 to-orange-500/20 backdrop-blur-2xl border border-red-400/30">
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 rounded-full bg-red-500/20 flex items-center justify-center border border-red-400/50 flex-shrink-0">
+              <svg class="w-6 h-6 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p class="font-bold text-red-200 mb-1">{{ cameraError.title }}</p>
+              <p class="text-sm text-red-300/80 mb-3">{{ cameraError.message }}</p>
+              <button @click="startCamera"
+                      class="px-4 py-2 bg-red-600 text-white font-bold text-xs rounded-lg hover:bg-red-700 transition-all active:scale-95">
+                إعادة المحاولة
+              </button>
+            </div>
+          </div>
+        </div>
+      </Transition>
 
       <Transition
         enter-active-class="transition duration-500 ease-out"
@@ -260,12 +284,17 @@
 
 <script setup>
 import { ref, computed, onUnmounted, nextTick } from 'vue';
+import { useToast } from '@/composables/useToast';
+import { useConfirm } from '@/composables/useConfirm';
 
 const props = defineProps({
   token: { type: String, required: true },
   sessionUuid: { type: String, default: null },
   language: { type: String, default: 'ar' },
 });
+
+const toast = useToast();
+const { confirm } = useConfirm();
 
 const localVideo = ref(null);
 const remoteVideo = ref(null);
@@ -279,6 +308,7 @@ const status = ref('بانتظار الصلاحيات');
 const isCalibrating = ref(false);
 const connectionStatus = ref('idle');
 const micLevel = ref(0);
+const cameraError = ref(null);
 
 let localStream = null;
 let remoteStream = new MediaStream();
@@ -327,6 +357,7 @@ const startMicMonitoring = () => {
 };
 
 const startCamera = async () => {
+  cameraError.value = null;
   try {
     status.value = 'جاري الاتصال بالكاميرا...';
     connectionStatus.value = 'connecting';
@@ -350,11 +381,32 @@ const startCamera = async () => {
     status.value = 'في غرفة الانتظار';
 
     connectWebSocket();
+    toast.success('تم تشغيل الكاميرا بنجاح');
   } catch (err) {
     console.error("Camera error:", err);
     status.value = 'فشل الكاميرا';
     connectionStatus.value = 'error';
-    alert("لم نتمكن من الوصول للكاميرا.");
+
+    // تحديد نوع الخطأ بدقة
+    let title = 'فشل الوصول للكاميرا';
+    let message = 'حدث خطأ غير متوقع.';
+
+    if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+      title = 'تم رفض الإذن';
+      message = 'يرجى السماح بالوصول للكاميرا من إعدادات المتصفح أو النظام.';
+    } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+      title = 'لا توجد كاميرا';
+      message = 'لم يتم العثور على كاميرا متصلة بجهازك.';
+    } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+      title = 'الكاميرا مشغولة';
+      message = 'الكاميرا مستخدمة من تطبيق آخر. أغلق التطبيقات وحاول مجدداً.';
+    } else if (err.name === 'OverconstrainedError') {
+      title = 'إعدادات غير مدعومة';
+      message = 'الكاميرا لا تدعم الإعدادات المطلوبة.';
+    }
+
+    cameraError.value = { title, message };
+    toast.error(title);
   }
 };
 
@@ -404,13 +456,6 @@ const startWebRTC = async () => {
     rtcpMuxPolicy: 'require',
   });
 
-  // ═══════════════════════════════════════════════════════════
-  // 4 transceivers بترتيب ثابت:
-  // [0] audio sendonly (المرشح يرسل)
-  // [1] video sendonly (المرشح يرسل)
-  // [2] audio recvonly (المرشح يستقبل HR)
-  // [3] video recvonly (المرشح يستقبل HR)
-  // ═══════════════════════════════════════════════════════════
   const candAudio = localStream.getAudioTracks()[0];
   const candVideo = localStream.getVideoTracks()[0];
 
@@ -498,11 +543,20 @@ const startWebRTC = async () => {
     console.error("WebRTC error:", error);
     status.value = 'خطأ';
     connectionStatus.value = 'error';
+    toast.error('فشل الاتصال بالخادم. تحقق من الشبكة.');
   }
 };
 
 const stopInterview = async () => {
-  if (!confirm('هل أنت متأكد من مغادرة الغرفة؟')) return;
+  const ok = await confirm({
+    title: 'مغادرة الغرفة؟',
+    message: 'هل أنت متأكد من مغادرة الغرفة؟ لن تتمكن من العودة.',
+    type: 'warning',
+    confirmText: 'مغادرة',
+    cancelText: 'البقاء',
+  });
+  if (!ok) return;
+
   if (localStream) localStream.getTracks().forEach(track => track.stop());
   if (peerConnection) peerConnection.close();
   if (ws) ws.close();
