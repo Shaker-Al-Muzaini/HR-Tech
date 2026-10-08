@@ -1,3 +1,4 @@
+cd "D:\HR Tech"; @'
 <div align="center">
 
 # 🎯 Smart HR Tech System
@@ -215,75 +216,3 @@
 </td>
 </tr>
 </table>
-
-### 📚 المكتبات الأساسية
-
-| الطبقة | التقنية | الغرض |
-|---|---|---|
-| **Frontend** | Vue 3 + Inertia.js + Tailwind CSS | واجهة تفاعلية |
-| **Backend (Web)** | Laravel 11 + PHP 8.3 | منطق HR |
-| **Backend (AI)** | FastAPI + Python 3.11 | التحليل الحي |
-| **WebRTC** | aiortc 1.9.0 | مكالمات فيديو |
-| **Vision** | MediaPipe + YOLOv8 | تحليل الوجه + الكائنات |
-| **Audio** | praat-parselmouth | تحليل Prosody |
-| **Database** | PostgreSQL 16 | تخزين دائم |
-| **Cache** | Redis 7 | Queue + Cache |
-
----
-
-## 🏗 البنية المعمارية
-
-```mermaid
-graph TB
-    subgraph "🖥️ Browser"
-        HR[HR Browser<br/>Chrome]
-        CAND[Candidate Browser<br/>Incognito]
-    end
-
-    subgraph "🐘 Laravel 11 :8000"
-        LAR[Laravel App<br/>Inertia + Vue 3]
-        QUEUE[Queue Worker<br/>n8n events]
-    end
-
-    subgraph "🐍 FastAPI :8001"
-        API[REST + WebSocket]
-        AI[AI Pipelines]
-        PROS[Prosody]
-        FACE[FACS]
-        YOLO[YOLO]
-        QG[Quality Gate]
-    end
-
-    subgraph "🗄️ Data Layer"
-        PG[(PostgreSQL 16)]
-        RD[(Redis)]
-    end
-
-    subgraph "🤖 External"
-        N8N[n8n]
-        GMAIL[Gmail/Slack]
-    end
-
-    HR <-->|WebRTC| API
-    CAND <-->|WebRTC| API
-    HR <-->|HTTPS| LAR
-    CAND <-->|HTTPS| LAR
-    LAR <-->|SQL| PG
-    LAR -->|Queue| QUEUE
-    QUEUE -->|Webhook| N8N
-    N8N -->|Actions| GMAIL
-    API <-->|SQL| PG
-    API <-->|Cache| RD
-    AI --> PROS
-    AI --> FACE
-    AI --> YOLO
-    AI --> QG
-    API --> AI
-
-    style HR fill:#4FC08D,color:#fff
-    style CAND fill:#4FC08D,color:#fff
-    style LAR fill:#FF2D20,color:#fff
-    style API fill:#009688,color:#fff
-    style PG fill:#336791,color:#fff
-    style RD fill:#DC382D,color:#fff
-    style N8N fill:#EA4B71,color:#fff
