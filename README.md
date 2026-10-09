@@ -1,4 +1,3 @@
-HR Tech
 <div align="center">
 
 # 🎯 Smart HR Tech System
