@@ -175,14 +175,6 @@
 
 ---
 
-### 🎯 تفاصيل مقابلة مكتملة
-> Hero card + Score Ring + KPI + قرار HR
-
-![Completed Detail](docs/screenshots/07-completed-detail.png)
-
----
-
-## 🛠 الهيكل التقني
 
 ### 💻 Stack التطوير
 
